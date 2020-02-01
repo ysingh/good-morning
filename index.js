@@ -13,61 +13,47 @@ const getWeatherData = async () => {
   return weatherData
 }
 
-const humanReadableTime = (timestamp) => {
+const humanReadableDateTime = (timestamp) => {
   return new Date(timestamp * 1e3).toLocaleString('en-US', { timezone: 'America/New_York' })
 }
 
-const dailyWeather = (hourlyWeather) => {
+const minMaxTemp = (hourlyWeather) => {
   let minTemp = Number.MAX_SAFE_INTEGER
   let maxTemp = Number.MIN_SAFE_INTEGER
   let minTempAt = null
   let maxTempAt = null
-  const hourlyWeatherFormatted = hourlyWeather.map(forecast => {
+
+  hourlyWeather.forEach(forecast => {
     if (forecast.apparentTemperature > maxTemp) {
       maxTemp = forecast.apparentTemperature
-      maxTempAt = humanReadableTime(forecast.time)
+      maxTempAt = humanReadableDateTime(forecast.time)
     }
     if (forecast.apparentTemperature < minTemp) {
       minTemp = forecast.apparentTemperature
-      minTempAt = humanReadableTime(forecast.time)
-    }
-    return {
-      time: humanReadableTime(forecast.time),
-      summary: forecast.summary,
-      temperature: `${forecast.apparentTemperature} F`
+      minTempAt = humanReadableDateTime(forecast.time)
     }
   })
+
   return {
-    hourlyWeatherFormatted,
-    max: {
-      temp: `${maxTemp} F`,
-      time: maxTempAt
-    },
-    min: {
-      temp: `${minTemp} F`,
-      time: minTempAt
-    }
+    max: `${maxTemp}F @ ${maxTempAt}`,
+    min: `${minTemp}F @ ${minTempAt}`
   }
 }
 
 const formatData = (weatherData) => {
-  const getWeatherDataForWholeDay = dailyWeather(weatherData.hourly.data.slice(0, 15))
+  const minMax = minMaxTemp(weatherData.hourly.data.slice(0, 15))
   return {
-    max: getWeatherDataForWholeDay.max,
-    min: getWeatherDataForWholeDay.min,
-    currentTime: humanReadableTime(weatherData.currently.time),
-    currentSummary: weatherData.currently.summary,
+    high: minMax.max,
+    low: minMax.min,
+    weatherNow: `${weatherData.currently.apparentTemperature} F - ${weatherData.currently.summary}`,
     chanceOfRain: `${weatherData.currently.precipProbability} %`,
-    currentTemp: `${weatherData.currently.apparentTemperature} F`,
     daySummary: weatherData.hourly.summary,
   }
 }
 
-
 const main = async () => {
   weatherData = await getWeatherData()
   const formattedData = formatData(weatherData)
-  
 }
 
 main()
