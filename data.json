@@ -1,0 +1,15 @@
+{
+    "max": {
+        "temp": "42.72 F",
+        "time": "2/1/2020, 10:00:00 AM"
+    },
+    "min": {
+        "temp": "36.88 F",
+        "time": "1/31/2020, 8:00:00 PM"
+    },
+    "currentTime": "1/31/2020, 8:32:43 PM",
+    "currentSummary": "Overcast",
+    "chanceOfRain": "0 %",
+    "currentTemp": "36.95 F",
+    "daySummary": "Mostly cloudy throughout the day."
+}
