@@ -5,6 +5,7 @@ jobs:
     name: send-message
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-node@v1
     - name: install dependencies
       run: npm install
     - name: send a message
