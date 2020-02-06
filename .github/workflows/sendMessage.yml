@@ -5,8 +5,21 @@ jobs:
     name: send-message
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-node@v1
+    - name: checkout repository
+      uses: actions/checkout@v1
+    - name: install node
+      uses: actions/setup-node@v1
     - name: install dependencies
-      run: npm install
+      run: run
     - name: send a message
       run: npm start
+      env:
+        DARKSKY_API_KEY: ${{secrets.DARKSKY_API_KEY}}
+        DARKSKY_BASE_URL: ${{secrets.DARKSKY_BASE_URL}}
+        GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
+        TELEGRAM_API_KEY: ${{secrets.TELEGRAM_API_KEY}}
+        TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}
+        LAT: ${{secrets.LAT}}
+        LON: ${{secrets.LON}}
+        HOME_ADDRESS: ${{secrets.HOME_ADDRESS}}
+        WORK_ADDRESS: ${{secrets.WORK_ADDRESS}}
