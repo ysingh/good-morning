@@ -1,9 +1,12 @@
 require('dotenv').config()
 
 const fetch = require('node-fetch')
-const fs = require('fs').promises
+const TelegramBot = require('node-telegram-bot-api')
 
-const { DARKSKY_API_KEY, DARKSKY_BASE_URL, LAT, LON } = process.env
+const { DARKSKY_API_KEY, DARKSKY_BASE_URL, LAT, LON, GOOGLE_API_KEY, HOME_ADDRESS, WORK_ADDRESS,
+  TELEGRAM_API_KEY, TELEGRAM_CHAT_ID } = process.env
+
+
 
 const getWeatherData = async () => {
   const reqUrl = new URL(`${DARKSKY_BASE_URL}${DARKSKY_API_KEY}/${LAT},${LON}`)
@@ -11,6 +14,16 @@ const getWeatherData = async () => {
   const res = await fetch(reqUrl)
   const weatherData = await res.json()
   return weatherData
+}
+
+const getTrafficData = async () => {
+  const googleUrl = new URL('https://maps.googleapis.com/maps/api/directions/json')
+  googleUrl.searchParams.set('origin', HOME_ADDRESS)
+  googleUrl.searchParams.set('destination', WORK_ADDRESS)
+  googleUrl.searchParams.set('key', GOOGLE_API_KEY)
+  const res = await fetch(googleUrl)
+  const driveTimeData = await res.json()
+  return driveTimeData.routes[0].legs[0].duration.text
 }
 
 const humanReadableDateTime = (timestamp) => {
@@ -46,7 +59,7 @@ const formatData = (weatherData) => {
     high: minMax.max,
     low: minMax.min,
     weatherNow: `${weatherData.currently.apparentTemperature} F - ${weatherData.currently.summary}`,
-    chanceOfRain: `${weatherData.currently.precipProbability} %`,
+    chanceOfRain: `${weatherData.currently.precipProbability* 100} %`,
     daySummary: weatherData.hourly.summary,
   }
 }
@@ -54,6 +67,13 @@ const formatData = (weatherData) => {
 const main = async () => {
   weatherData = await getWeatherData()
   const formattedData = formatData(weatherData)
+  const driveTime = await getTrafficData()
+  const message = {
+    ...formattedData,
+    driveTime
+  }
+  const bot = new TelegramBot(TELEGRAM_API_KEY)
+  bot.sendMessage(TELEGRAM_CHAT_ID, JSON.stringify(message, null, 4))
 }
 
 main()
