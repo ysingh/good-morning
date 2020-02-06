@@ -10,7 +10,7 @@ jobs:
     - name: install node
       uses: actions/setup-node@v1
     - name: install dependencies
-      run: run
+      run: npm install
     - name: send a message
       run: npm start
       env:
