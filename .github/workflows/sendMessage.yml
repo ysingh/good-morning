@@ -1,5 +1,7 @@
 name: Good Morning
-on: push
+on:
+  schedule:
+    - cron: '0 11 * * 1-5'
 jobs:
   send-message:
     name: send-message
