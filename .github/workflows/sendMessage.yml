@@ -18,7 +18,7 @@ jobs:
         DARKSKY_BASE_URL: ${{secrets.DARKSKY_BASE_URL}}
         GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
         TELEGRAM_API_KEY: ${{secrets.TELEGRAM_API_KEY}}
-        TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}
+        TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
         LAT: ${{secrets.LAT}}
         LON: ${{secrets.LON}}
         HOME_ADDRESS: ${{secrets.HOME_ADDRESS}}
